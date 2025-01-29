@@ -18,7 +18,7 @@ const remove = id => {
 }
 
 const updateNumber = updatedPerson => {
-    const request = axios.put(`${url}/${updatedPerson.id}`, updatedPerson)
+    const request = axios.put(`${url}/${updatedPerson._id}`, updatedPerson)
     return request.then(response => response.data)
 }
 
