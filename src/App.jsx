@@ -48,7 +48,7 @@ const App = () => {
         personService
           .updateNumber(updatedPerson)
           .then(() => {
-            setPersons(persons.map((p) => p._id === updatedPerson._id ? updatedPerson : p))
+            setPersons(persons.map((p) => p.id === updatedPerson.id ? updatedPerson : p))
             setNewName('')
             setNewPhoneNumber('')
             setNewNotification(`Number of ${updatedPerson.name} was updated`)
@@ -60,7 +60,7 @@ const App = () => {
           .catch(error => {
             setNewNotification(`${updatedPerson.name} was already deleted from server`)
             setIsSuccessfull(false)
-            setPersons(persons.filter((p) => p._id !== updatedPerson._id))
+            setPersons(persons.filter((p) => p.id !== updatedPerson.id))
             setTimeout(() => {
               setNewNotification(null)
             }, 5000)
@@ -89,8 +89,8 @@ const App = () => {
 
   const removePerson = ({p}) => {
     if (window.confirm(`Delete ${p.name}?`)) {
-      personService.remove(p._id).then(() => {
-        setPersons(persons.filter((person) => person._id !== p._id))
+      personService.remove(p.id).then(() => {
+        setPersons(persons.filter((person) => person.id !== p.id))
       })
     }
   }
@@ -112,7 +112,7 @@ const App = () => {
       />
       <h3>Numbers</h3>
       {filteredPersons.map(p => (
-        <div key={p._id}>
+        <div key={p.id}>
         <Person person={p} /> <Delete onClick={() => removePerson({p})} />
         </div>
       ))}
