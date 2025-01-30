@@ -58,9 +58,16 @@ const App = () => {
             }, 5000)}
           )
           .catch(error => {
-            setNewNotification(`${updatedPerson.name} was already deleted from server`)
+            if (error.response.status === 404) {
+              setNewNotification(`The person ${updatedPerson.name} was already deleted from the server`)
+              setPersons(persons.filter(p => p.id !== updatedPerson.id))
+              setNewName('')
+              setNewPhoneNumber('')
+              
+            } else {
+              setNewNotification(`${error.response.data.error}`)
+            }
             setIsSuccessfull(false)
-            setPersons(persons.filter((p) => p.id !== updatedPerson.id))
             setTimeout(() => {
               setNewNotification(null)
             }, 5000)
@@ -73,17 +80,25 @@ const App = () => {
       }
       console.log(newPerson);
       
-      personService.create(newPerson).then(returnedPerson => {
-        setPersons(persons.concat(returnedPerson))
-        setNewName("")
-        setNewPhoneNumber("")
-        setNewNotification(`${returnedPerson.name} was added to the phonebook`)
-        setIsSuccessfull(true)
-        setTimeout(() => {
-          setNewNotification(null)
-        }, 5000);
-      }
-      )
+      personService.create(newPerson)
+        .then(returnedPerson => {
+          setPersons(persons.concat(returnedPerson))
+          setNewName("")
+          setNewPhoneNumber("")
+          setNewNotification(`${returnedPerson.name} was added to the phonebook`)
+          setIsSuccessfull(true)
+          setTimeout(() => {
+            setNewNotification(null)
+          }, 5000);
+        })
+        .catch(error => {
+          setNewNotification(`${error.response.data.error}`)
+          console.log(error.response)
+          setIsSuccessfull(false)
+          setTimeout(() => {
+            setNewNotification(null)
+          }, 5000)
+        })
     }
   }
 
